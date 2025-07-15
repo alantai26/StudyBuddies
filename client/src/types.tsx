@@ -1,0 +1,14 @@
+// client/src/types.ts
+
+export interface User {
+    id: string;
+    email: string;
+    username: string;
+  }
+  
+  export interface Course {
+    id: string;
+    crn: string;
+    name: string;
+  }
+  
