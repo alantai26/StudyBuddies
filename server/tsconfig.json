@@ -1,4 +1,3 @@
-// server/tsconfig.json
 {
   "compilerOptions": {
     "target": "es2020",             /* Specify ECMAScript target version. */

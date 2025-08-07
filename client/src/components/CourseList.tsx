@@ -1,6 +1,4 @@
-// client/src/components/CourseList.tsx
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { Course } from '../types';
 import CourseCard from './CourseCard.tsx';
 
@@ -9,7 +7,6 @@ const CourseList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This simulates a network request to your backend API
     fetch('http://localhost:3001/api/courses')
       .then((res) => res.json())
       .then((data) => {

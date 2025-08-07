@@ -54,7 +54,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         northeasternRed: {
-          DEFAULT: "#E63946", 
+          DEFAULT: "#C8102E", 
           darker: "#D03028",
         },
       },

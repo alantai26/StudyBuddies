@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.11",
+    "@radix-ui/react-tooltip": "^1.2.7",
     "bcrypt": "^6.0.0",
+    "class-variance-authority": "^0.7.1",
     "dotenv": "^17.2.0",
     "jsonwebtoken": "^9.0.2",
+    "react-dialog": "^0.1.0",
     "react-router-dom": "^7.6.3"
   },
   "devDependencies": {

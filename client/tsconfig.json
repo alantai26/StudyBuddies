@@ -21,9 +21,9 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path Aliases */
-    "baseUrl": "./src", // This is important: it sets the base for @/
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"] // This maps @/ to everything under baseUrl
+      "@/*": ["*"]
     }
   },
   "include": ["src"],

@@ -1,19 +1,15 @@
-import { Link } from "react-router-dom" // Assuming react-router-dom for navigation
-import { Button } from "../components/ui/button" // Updated import path for your custom Button
+import { Link } from "react-router-dom"
+import { Button } from "../components/ui/button"
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFBF5]">
       <header className="flex items-center justify-between px-4 py-3 lg:px-6 lg:py-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          {/* Custom logo mimicking the image */}
-          <div className="bg-northeasternRed text-white text-xs font-bold px-2 py-1 rounded-md">
-            NU
-            <br />
-            GROUP
-            <br />
-            FINDER
-          </div>
+          <img
+            src="/Study (2).png"
+            className="w-16 h-16"
+          />
         </div>
         <div className="flex items-center gap-3">
           <Link to="/login">
@@ -74,19 +70,19 @@ export default function LandingPage() {
           className="absolute top-[30%] right-[10%] w-12 h-12 md:w-16 md:h-16"
         /> */}
 
-        <div className="max-w-3xl px-4 space-y-8 z-10">
+        <div className="max-w-3xl px-4 space-y-5 z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-            Create Study Groups & Find Your Classmates!
+            Find your StudyBuddies!
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            <span className="font-bold">EASILY</span> meet your class members by entering your class CRN numbers!
+            With a <span className="font-bold">QUICK</span> scan of your schedule, meet your class members!
           </p>
           <div>
-          <Link to="/register">
-          <Button className="bg-northeasternRed text-white hover:bg-northeasternRed/darker text-lg px-8 py-6 rounded-full shadow-lg transition-transform transform hover:scale-105">
-            Get Started
-          </Button>
-          </Link>
+            <Link to="/register">
+              <Button className="bg-northeasternRed text-white hover:bg-northeasternRed/darker text-lg px-8 py-6 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
       </main>
@@ -98,23 +94,26 @@ export default function LandingPage() {
               Connect with your classmates
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Explore profiles, join groups, and find study partners.
+              Scan your schedule, explore profiles, and find study partners!
             </p>
           </div>
-          <div className="mx-auto mt-8 max-w-5xl rounded-xl overflow-hidden shadow-lg border border-gray-200">
-            <img
-              src="/placeholder.svg?height=400&width=800"
-              width="800"
-              height="400"
-              alt="Dashboard preview showing student profiles"
-              className="w-full h-auto object-cover"
-            />
+          <div className="mx-auto mt-8 max-w-4xl rounded-xl overflow-hidden shadow-lg border border-gray-200">
+            <video
+              className="w-full h-auto"
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src="/demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </section>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-gray-200 bg-white">
         <p className="text-xs text-muted-foreground">
-          NUGroupFinder
+
         </p>
       </footer>
     </div>

@@ -1,5 +1,3 @@
-// client/src/components/CourseCard.tsx
-
 import React from 'react';
 import type { Course } from '../types';
 
