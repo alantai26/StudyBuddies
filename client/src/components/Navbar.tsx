@@ -11,7 +11,7 @@ export default function Navbar() {
         <img
           src="/Study (2).png"
           className="w-16 h-16"
-          alt="NUGroupFinder Logo"
+          alt="StudyBuddies Logo"
         />
       </Link>
       <div className="flex items-center gap-3">
