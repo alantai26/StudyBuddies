@@ -21,7 +21,7 @@
     "react-dialog": "^0.1.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
-    "socket.io-client": "^4.7.5",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
   },

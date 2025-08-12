@@ -30,13 +30,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         try {
-          const response = await fetch('http://localhost:3001/api/profile', {
+          const response = await fetch(`${apiUrl}/api/profile`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           });
           if (!response.ok) {
@@ -60,7 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     try {
-      const response = await fetch('http://localhost:3001/api/profile', {
+      const response = await fetch(`${apiUrl}3001/api/profile`, {
         headers: { Authorization: `Bearer ${newToken}` },
       });
       if (!response.ok) throw new Error("Failed to fetch profile after login");
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const refetchUser = useCallback(async () => {
     if (token) {
       try {
-        const response = await fetch('http://localhost:3001/api/profile', {
+        const response = await fetch(`${apiUrl}:3001/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Token invalid, logging out");

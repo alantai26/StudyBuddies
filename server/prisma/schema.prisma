@@ -21,7 +21,38 @@ model User {
   bio       String?
   socials   Json? 
   
+  conversationsA Conversation[] @relation("UserA")
+  conversationsB Conversation[] @relation("UserB")
+  sentMessages   PrivateMessage[]
 } 
+
+model Conversation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+
+  userAId       String
+  userBId       String
+  userA         User     @relation("UserA", fields: [userAId], references: [id])
+  userB         User     @relation("UserB", fields: [userBId], references: [id])
+  
+  messages      PrivateMessage[]
+
+  @@unique([userAId, userBId]) // Ensures there's only one conversation per pair of users
+}
+
+model PrivateMessage {
+  id              String   @id @default(cuid())
+  content         String
+  createdAt       DateTime @default(now())
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+  conversationId  String
+
+  sender          User     @relation(fields: [senderId], references: [id])
+  senderId        String
+
+  @@index([conversationId])
+}
 
 model Course {
   id         String    @id @default(cuid())

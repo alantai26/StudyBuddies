@@ -5,9 +5,10 @@ import CourseCard from './CourseCard.tsx';
 const CourseList = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/courses')
+    fetch(`${apiUrl}/api/courses`)
       .then((res) => res.json())
       .then((data) => {
         setCourses(data);

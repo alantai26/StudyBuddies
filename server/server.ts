@@ -5,6 +5,9 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from './authMiddleware';
+import http from 'http';
+import { Server } from 'socket.io';
+
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -15,10 +18,27 @@ if (!JWT_SECRET) {
 const app = express();
 const prisma = new PrismaClient();
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST']
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('A user connected with socket id:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
@@ -44,8 +64,6 @@ app.post('/api/register', async (req, res) => {
         password: hashedPassword,
       },
     });
-
-
     res.sendStatus(201);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -79,6 +97,43 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.post('/api/conversations', authMiddleware, async (req, res) => {
+  const { recipientId } = req.body;
+  const userId = req.user.userId;
+
+  const [userAId, userBId] = [userId, recipientId].sort();
+
+  try {
+    let conversation = await prisma.conversation.findUnique({
+      where: { userAId_userBId: { userAId, userBId } },
+    });
+
+    if (!conversation) {
+      conversation = await prisma.conversation.create({
+        data: { userAId, userBId },
+      });
+    }
+    res.json(conversation);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create or find conversation.' });
+  }
+});
+
+app.get('/api/conversations/:conversationId/messages', authMiddleware, async (req, res) => {
+  const { conversationId } = req.params;
+  try {
+    const messages = await prisma.privateMessage.findMany({
+      where : { conversationId },
+      orderBy: { createdAt: 'asc' },
+      include: { sender: { select: { id: true, name: true } } }
+    });
+    res.json(messages);
+  } catch(error) {
+    console.error("Failed to fetch messages:", error);
+    res.status(500).json({ message: 'Failed to fetch messages.' });
+  }
+});
+
 app.get('/api/profile', authMiddleware, async (req, res) => {
   const userId = req.user.userId;
   try {
@@ -90,7 +145,6 @@ app.get('/api/profile', authMiddleware, async (req, res) => {
     res.json(user);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch profile' }); }
 });
-
 
 app.put('/api/profile', authMiddleware, async (req, res) => {
   const userId = req.user.userId;
@@ -130,6 +184,7 @@ app.post('/api/sections', authMiddleware, async (req, res) => {
     res.status(500).json({ message: 'Failed to create new section.' });
   }
 });
+
 app.get('/api/courses', authMiddleware, async (req, res) => {
   try {
     const courses = await prisma.course.findMany({
@@ -183,9 +238,7 @@ app.post('/api/courses/upsert-batch', authMiddleware, async (req, res) => {
   try {
     const sectionCrns: string[] = [];
 
-    // This loop processes each scanned course
     for (const scannedCourse of coursesFromScan) {
-      // 1. Find or create the parent Course (e.g., "CS3500")
       const course = await prisma.course.upsert({
         where: { courseCode: scannedCourse.id },
         update: {},
@@ -195,7 +248,6 @@ app.post('/api/courses/upsert-batch', authMiddleware, async (req, res) => {
         },
       });
 
-      // 2. Find or create the Section and connect it to the parent Course
       await prisma.section.upsert({
         where: { crn: scannedCourse.crn },
         update: {},
@@ -207,7 +259,6 @@ app.post('/api/courses/upsert-batch', authMiddleware, async (req, res) => {
       sectionCrns.push(scannedCourse.crn);
     }
     
-    // 3. Return the full Section objects to the frontend
     const updatedSections = await prisma.section.findMany({
       where: { crn: { in: sectionCrns } },
       include: { course: true }
@@ -257,8 +308,7 @@ app.get('/api/profile/sections', authMiddleware, async (req, res) => {
 });
 
 
-
-const PORT = 3001;
+const PORT = process.env.PORT || 3001; 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

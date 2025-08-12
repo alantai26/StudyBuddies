@@ -14,10 +14,27 @@ export default function Navbar() {
           alt="StudyBuddies Logo"
         />
       </Link>
+      <div className="flex flex-1 justify-start space-x-8 ml-8">
+        {user && (
+          <>
+            <Link to="/profile">
+              <Button className="text-xl font-bold text-gray-900 font-sans">Profile</Button>
+            </Link>
+            <Link to="/scan-schedule">
+              <Button className="text-xl font-bold text-gray-900 font-sans">Scan Your Schedule</Button>
+            </Link>
+            <Link to="/courses">
+              <Button className="text-xl font-bold text-gray-900 font-sans">Courses</Button>
+            </Link>
+          </>
+        )}
+
+      </div>
+
       <div className="flex items-center gap-3">
         {user ? (
           <>
-            <span className="font-semibold text-gray-800">Welcome, {user.name}!</span>
+            <span className="text-xl font-bold text-gray-900 font-sans">Welcome, {user.name}!</span>
             <Button onClick={logout} variant="outline">Logout</Button>
           </>
         ) : (

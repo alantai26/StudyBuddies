@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { BookOpen, Users, Plus, GraduationCap, X, AlertTriangle, Eclipse, Twitter, Linkedin, Instagram, Github } from "lucide-react";
 import toast from 'react-hot-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -76,6 +74,7 @@ export default function DashboardPage() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [actionToConfirm, setActionToConfirm] = useState<(() => void) | null>(null);
   const [classmatesCourse, setClassmatesCourse] = useState<CourseSummary | null>(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -89,8 +88,8 @@ export default function DashboardPage() {
     if (!token) return;
     setIsLoading(true);
     Promise.all([
-      fetch('http://localhost:3001/api/profile/sections', { headers: { 'Authorization': `Bearer ${token}` } }),
-      fetch('http://localhost:3001/api/courses', { headers: { 'Authorization': `Bearer ${token}` } })
+      fetch(`${apiUrl}/api/profile/sections`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${apiUrl}/api/courses`, { headers: { 'Authorization': `Bearer ${token}` } })
     ])
       .then(async ([enrolledRes, availableRes]) => {
         if (!enrolledRes.ok || !availableRes.ok) throw new Error('Failed to fetch data');
@@ -133,7 +132,7 @@ export default function DashboardPage() {
     const toastId = toast.loading("Saving profile...");
 
     try {
-      const response = await fetch('http://localhost:3001/api/profile', {
+      const response = await fetch(`${apiUrl}3001/api/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(profileData),
@@ -180,7 +179,7 @@ export default function DashboardPage() {
     if (!token) return toast.error("Please log in to enroll.");
     setIsProcessing(sectionId);
     try {
-      const response = await fetch(`http://localhost:3001/api/sections/${sectionId}/enroll`, {
+      const response = await fetch(`${apiUrl}/api/sections/${sectionId}/enroll`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -415,13 +414,13 @@ export default function DashboardPage() {
                 className="w-40 h-40 rounded-full items-center transition-transform group-hover:scale-105 mt-3"
               />
             </button>
-            {user && !user?.bio && !user?.socials ? (
+            {user && user?.bio && user?.socials ? (
               <h2 className="text-xl font-bold tracking-tighter sm:text-lg md:text-xl flex items-center justify-center gap-3 mt-3">
-                Make sure to add your bio and socials by clicking your profile picture above!
+                Edit your bio and socials above.
               </h2>
             ) : (
               <h2 className="text-2xl font-bold tracking-tighter sm:text-lg md:text-2xl flex items-center justify-center gap-3 mt-3">
-                Click your profile picture to customize your profile!
+                Click your profile picture to add your bio and socials!
               </h2>
             )}
           </div>
@@ -636,6 +635,7 @@ export default function DashboardPage() {
                             />
                             <span className="font-semibold text-gray-800">{classmate.name}</span>
                           </div>
+                          
                         </AccordionTrigger>
                         <AccordionContent>
                           <div className="pl-2 space-y-4">
